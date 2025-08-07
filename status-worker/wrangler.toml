@@ -1,0 +1,24 @@
+name = "gohalallife-status"
+main = "src/index.ts"
+compatibility_date = "2025-06-18"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# GitHub Actions IP ranges (can be updated as needed)
+ALLOWED_IPS = "140.82.112.0/20,143.55.64.0/20"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "halallife-restaurants-prod"
+database_id = "b0fe9e9d-a169-47c4-9cec-62eb5575122b"
+
+# Production environment
+[env.production]
+name = "gohalallife-status-production"
+vars = { ENVIRONMENT = "production", ALLOWED_IPS = "140.82.112.0/20,143.55.64.0/20" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "halallife-restaurants-prod"
+database_id = "b0fe9e9d-a169-47c4-9cec-62eb5575122b"

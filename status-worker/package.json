@@ -1,0 +1,23 @@
+{
+  "name": "gohalallife-status-worker",
+  "version": "1.0.0",
+  "description": "Health check worker for GoHalalLife monitoring",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "test": "vitest",
+    "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "hono": "^4.5.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250802.0",
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0",
+    "vitest": "^1.6.0",
+    "wrangler": "^4.28.0"
+  }
+}

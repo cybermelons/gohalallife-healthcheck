@@ -1,0 +1,6 @@
+[submodule "uptime-monitor"]
+	path = uptime-monitor
+	url = https://github.com/upptime/uptime-monitor.git
+[submodule "status-page"]
+	path = status-page
+	url = https://github.com/upptime/status-page.git

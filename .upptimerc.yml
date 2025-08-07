@@ -1,0 +1,153 @@
+# Upptime configuration for GoHalalLife status monitoring
+owner: cybermelons
+repo: halallife-status
+
+sites:
+  # Production site monitoring
+  - name: GoHalalLife Main Site (Production)
+    url: https://gohalallife.com
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 3000
+    
+  # Production API endpoint monitoring
+  - name: Search API (Production)
+    url: https://gohalallife.com/api/search-restaurants.json?q=halal&location=Chicago&limit=10
+    method: GET
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 2000
+    
+  # Local development monitoring (when running)
+  - name: Local Dev Site
+    url: http://localhost:4321
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 1000
+    __dangerous__body_down_if_text_missing: "GoHalalLife"
+    
+  - name: Local Dev API
+    url: http://localhost:4321/api/search-restaurants.json?q=halal&location=Chicago&limit=10
+    method: GET
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 1000
+    
+  # Status worker endpoints (Production)
+  - name: Status Worker - Public Health (Production)
+    url: https://gohalallife-status-production.innovativesolutions109-089.workers.dev/status
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 500
+    
+  - name: Status Worker - Database Health (Production)
+    url: https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/db
+    headers:
+      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}"
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 1000
+    __dangerous__body_down: '"status":"error"'
+    __dangerous__body_degraded: '"status":"degraded"'
+    
+  - name: Status Worker - FTS Health (Production)
+    url: https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/fts
+    headers:
+      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}"
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 1500
+    __dangerous__body_down: '"status":"error"'
+    __dangerous__body_degraded: '"status":"degraded"'
+    
+  - name: Status Worker - Performance (Production)
+    url: https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/performance
+    headers:
+      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}"
+    expectedStatusCodes: 
+      - 200
+    maxResponseTime: 2000
+    __dangerous__body_down: '"status":"error"'
+    __dangerous__body_degraded: '"status":"degraded"'
+  
+  # Local status worker (when running)
+  - name: Local Status Worker - Public Health
+    url: http://localhost:8787/status
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 500
+    
+  - name: Local Status Worker - Database Health
+    url: http://localhost:8787/health/db
+    headers:
+      - "X-API-Key: test-api-key-12345"
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 1000
+    
+  - name: Local Status Worker - FTS Health  
+    url: http://localhost:8787/health/fts
+    headers:
+      - "X-API-Key: test-api-key-12345"
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 1500
+    
+  - name: Local Status Worker - Performance
+    url: http://localhost:8787/health/performance
+    headers:
+      - "X-API-Key: test-api-key-12345"
+    expectedStatusCodes: 
+      - 200
+      - 502  # Not running
+      - 503  # Service unavailable
+    maxResponseTime: 2000
+
+status-website:
+  # CNAME for custom domain (optional)
+  # cname: status.gohalallife.com
+  baseUrl: /halallife-status
+  logoUrl: https://gohalallife.com/logo/logo-512.png
+  name: GoHalalLife System Status
+  introTitle: "🌙 GoHalalLife System Status"
+  introMessage: |
+    Real-time monitoring of GoHalalLife services and infrastructure.
+    
+    This page tracks the health of our restaurant search platform, including database connectivity, 
+    full-text search functionality, and API performance.
+  navbar:
+    - title: Status
+      href: /
+    - title: GitHub
+      href: https://github.com/$OWNER/$REPO
+    - title: Main Site
+      href: https://gohalallife.com
+
+# How often to check (in minutes)
+workflowSchedule:
+  graphs: "0 0 * * *"
+  responseTime: "0 23 * * *"
+  staticSite: "0 1 * * *"
+  summary: "0 0 * * *"
+  updateTemplate: "0 0 * * *"
+  updates: "0 3 * * *"
+  uptime: "*/5 * * * *"  # Check every 5 minutes
+
+# Assignees for incidents
+assignees:
+  - cybermelons
+
+# Configure notifications (optional)
+# notifications:
+#   - type: email
+#     email: admin@gohalallife.com
