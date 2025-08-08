@@ -38,6 +38,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           UPPTIME_RC: .upptimerc.prod.yml
           
+      - name: Fix branch references
+        run: |
+          # Replace 'master' with 'main' in the generated site files
+          find site/status-page/__sapper__/export -type f -name "*.js" -exec sed -i 's/\/master\//\/main\//g' {} +
+          
       - name: Copy API data to site
         run: |
           cp -r api site/status-page/__sapper__/export/
@@ -61,7 +66,10 @@ jobs:
           done
           
           # Ensure summary.json exists
-          cp history/summary.json site/status-page/__sapper__/export/ 2>/dev/null || echo '{"status":"none"}' > site/status-page/__sapper__/export/summary.json
+          cp history/summary.json site/status-page/__sapper__/export/ 2>/dev/null || echo '[]' > site/status-page/__sapper__/export/summary.json
+          
+          # Create error page to prevent 404
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/gohalallife-healthcheck/"></head><body>Redirecting...</body></html>' > site/status-page/__sapper__/export/error.html
           
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
