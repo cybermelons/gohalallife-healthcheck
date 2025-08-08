@@ -41,7 +41,9 @@ jobs:
       - name: Fix branch references
         run: |
           # Replace 'master' with 'main' in the generated site files
-          find site/status-page/__sapper__/export -type f -name "*.js" -exec sed -i 's/\/master\//\/main\//g' {} +
+          find site -type f \( -name "*.js" -o -name "*.html" \) -exec sed -i 's/\/master\//\/main\//g' {} +
+          # Also check the __sapper__ directory specifically
+          find site/__sapper__ -type f \( -name "*.js" -o -name "*.html" \) -exec sed -i 's/\/master\//\/main\//g' {} + 2>/dev/null || true
           
       - name: Copy API data to site
         run: |
@@ -69,7 +71,33 @@ jobs:
           cp history/summary.json site/status-page/__sapper__/export/ 2>/dev/null || echo '[]' > site/status-page/__sapper__/export/summary.json
           
           # Create error page to prevent 404
-          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0; url=/gohalallife-healthcheck/"></head><body>Redirecting...</body></html>' > site/status-page/__sapper__/export/error.html
+          cat > site/status-page/__sapper__/export/error.html << 'EOF'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Error - GoHalalLife Status</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; text-align: center; }
+    h1 { color: #333; margin-bottom: 20px; }
+    p { color: #666; line-height: 1.6; margin-bottom: 20px; }
+    a { color: #0066cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .button { display: inline-block; padding: 10px 20px; background: #0066cc; color: white; border-radius: 5px; margin-top: 20px; }
+    .button:hover { background: #0052a3; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <h1>⚠️ Status Page Loading</h1>
+  <p>The status page is still initializing and collecting monitoring data.</p>
+  <p>This typically happens when the monitoring system has just been set up.</p>
+  <p>Please wait a few minutes for the data to populate.</p>
+  <a href="/gohalallife-healthcheck/" class="button">Try Again</a>
+  <p style="margin-top: 40px; font-size: 14px;">If this problem persists, please check the <a href="https://github.com/cybermelons/gohalallife-healthcheck">GitHub repository</a>.</p>
+</body>
+</html>
+EOF
           
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
