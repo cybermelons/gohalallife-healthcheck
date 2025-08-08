@@ -1,0 +1,61 @@
+# This workflow runs the Upptime monitor for production endpoints only
+name: Uptime CI
+
+on:
+  schedule:
+    # Run every 5 minutes
+    - cron: "*/5 * * * *"
+  repository_dispatch:
+    types: [uptime]
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: Check status
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          
+      - name: Update status
+        run: |
+          # Set environment variable to use production config
+          export UPPTIME_RC=.upptimerc.prod.yml
+          pnpx @upptime/uptime-monitor update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEALTH_API_KEY: ${{ secrets.HEALTH_API_KEY }}
+          
+      - name: Generate graphs
+        run: |
+          export UPPTIME_RC=.upptimerc.prod.yml
+          pnpx @upptime/uptime-monitor graphs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Generate site
+        run: |
+          export UPPTIME_RC=.upptimerc.prod.yml
+          pnpx @upptime/uptime-monitor site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Generate summary
+        run: |
+          export UPPTIME_RC=.upptimerc.prod.yml
+          pnpx @upptime/uptime-monitor summary
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

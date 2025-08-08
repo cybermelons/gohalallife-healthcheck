@@ -15,29 +15,30 @@ This repository contains:
 # Install dependencies
 pnpm install
 
-# Check all environments
-pnpm status:all
+# Check all endpoints (local + production)
+pnpm status
 
-# Check specific environment
-pnpm status:local
-pnpm status:production
+# Check production endpoints only
+pnpm status:prod
 
-# Generate status page
-pnpm status:build
+# View status commands
+pnpm status:build  # Show build info
+pnpm status:graphs # Show graphs info
+pnpm status:update # Show update info
 ```
 
 ## CLI Commands
 
 ### Status Checks
-- `pnpm status` - Check all configured endpoints
-- `pnpm status:local` - Check local development environment
-- `pnpm status:production` - Check production environment
-- `pnpm status:all` - Check all environments
-- `pnpm status:build` - Check all and generate HTML status page
+- `pnpm status` - Quick health check of key endpoints
+- `pnpm status:prod` - Check production endpoints only
+- `pnpm status:build` - Information about building status pages
+- `pnpm status:graphs` - Information about generating graphs
+- `pnpm status:update` - Information about running updates
 
-### Custom Host
+### View Status Page
 ```bash
-node cli/index.js --host http://localhost:3000
+pnpm serve  # Serve the status page locally (after GitHub Actions generates it)
 ```
 
 ## Project Structure
@@ -57,26 +58,21 @@ gohalallife-healthcheck/
 
 ## Configuration
 
-### Environment Mapping
+### Dual Configuration System
 
-The CLI tool maps environments in `cli/index.js`:
+This project uses two Upptime configurations:
 
-```javascript
-const ENV_CONFIG = {
-  local: {
-    baseUrl: 'http://localhost:8787',
-    apiKey: 'test-api-key-12345'
-  },
-  production: {
-    baseUrl: 'https://gohalallife-status-production.innovativesolutions109-089.workers.dev',
-    apiKey: 'your-secure-health-check-api-key-2025'
-  }
-};
-```
+1. **`.upptimerc.yml`** - Full configuration with all endpoints (local + production)
+   - Used for local testing and development
+   - Contains localhost endpoints for testing local services
+
+2. **`.upptimerc.prod.yml`** - Production-only configuration
+   - Used by GitHub Actions for automated monitoring
+   - Excludes localhost endpoints to prevent false failures
 
 ### Upptime Configuration
 
-Edit `.upptimerc.yml` to configure monitored endpoints:
+Endpoints are configured in YAML files:
 
 ```yaml
 sites:
@@ -85,7 +81,11 @@ sites:
     expectedStatusCodes:
       - 200
       - 201
+    headers:
+      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}"  # For authenticated endpoints
 ```
+
+**Note**: The CLI provides basic health checks. Full Upptime features (graphs, history, incidents) are handled by GitHub Actions.
 
 ## Status Worker
 
@@ -119,9 +119,10 @@ pnpm status-worker:deploy
 
 ### Adding New Endpoints
 
-1. Add to `.upptimerc.yml`
-2. Update `ENV_CONFIG` in `cli/index.js` if needed
-3. Run checks with `pnpm status`
+1. Add to `.upptimerc.yml` for local testing
+2. Add to `.upptimerc.prod.yml` if it should be monitored in production
+3. Run `pnpm status` to test locally
+4. Commit and push - GitHub Actions will handle the rest
 
 ## GitHub Actions
 
