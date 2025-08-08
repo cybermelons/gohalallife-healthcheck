@@ -116,7 +116,7 @@ sites:
 status-website:
   # CNAME for custom domain (optional)
   # cname: status.gohalallife.com
-  baseUrl: /halallife-status
+  baseUrl: /gohalallife-healthcheck
   logoUrl: https://gohalallife.com/logo/logo-512.png
   name: GoHalalLife System Status
   introTitle: "🌙 GoHalalLife System Status"
