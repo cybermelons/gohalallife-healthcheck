@@ -51,8 +51,14 @@ async function checkEndpoint(site, envConfig) {
     const headers = {};
     site.headers?.forEach(header => {
       const [key, value] = header.split(':').map(s => s.trim());
-      if (key === 'x-api-key' && envConfig?.apiKey) {
-        headers[key] = envConfig.apiKey;
+      // Handle case-insensitive API key header
+      if (key.toLowerCase() === 'x-api-key') {
+        // Replace GitHub secrets syntax or use env config API key
+        if (value.includes('${{') && envConfig?.apiKey) {
+          headers[key] = envConfig.apiKey;
+        } else if (!value.includes('${{')) {
+          headers[key] = value;
+        }
       } else {
         headers[key] = value;
       }
@@ -81,10 +87,11 @@ async function checkEndpoint(site, envConfig) {
     }
     
     // Check response body for specific text if configured
-    if (status === 'up' && site.__dangerous__body_down && response.data.includes(site.__dangerous__body_down)) {
+    const responseBody = typeof response.data === 'string' ? response.data : JSON.stringify(response.data);
+    if (status === 'up' && site.__dangerous__body_down && responseBody.includes(site.__dangerous__body_down)) {
       status = 'down';
     }
-    if (status === 'up' && site.__dangerous__body_degraded && response.data.includes(site.__dangerous__body_degraded)) {
+    if (status === 'up' && site.__dangerous__body_degraded && responseBody.includes(site.__dangerous__body_degraded)) {
       status = 'degraded';
     }
     

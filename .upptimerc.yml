@@ -20,7 +20,7 @@ sites:
     
   # Local development monitoring (when running)
   - name: Local Dev Site
-    url: http://localhost:4321
+    url: http://localhost:8787
     expectedStatusCodes: 
       - 200
       - 502  # Not running
@@ -29,7 +29,7 @@ sites:
     __dangerous__body_down_if_text_missing: "GoHalalLife"
     
   - name: Local Dev API
-    url: http://localhost:4321/api/search-restaurants.json?q=halal&location=Chicago&limit=10
+    url: http://localhost:8787/api/search-restaurants.json?q=halal&location=Chicago&limit=10
     method: GET
     expectedStatusCodes: 
       - 200
