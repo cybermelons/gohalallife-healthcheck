@@ -163,7 +163,8 @@ program
       try {
         let curlCmd = `curl -s -o /dev/null -w "%{http_code}" ${endpoint.url}`;
         if (endpoint.needsAuth) {
-          curlCmd = `curl -s -o /dev/null -w "%{http_code}" -H "X-API-Key: your-secure-health-check-api-key-2025" ${endpoint.url}`;
+          const apiKey = process.env.HEALTH_API_KEY || 'YOUR_API_KEY_HERE';
+          curlCmd = `curl -s -o /dev/null -w "%{http_code}" -H "X-API-Key: ${apiKey}" ${endpoint.url}`;
         }
         const statusCode = execSync(curlCmd, { encoding: 'utf8' }).trim();
         const status = statusCode === '200' ? chalk.green('UP') : chalk.yellow(`UP (${statusCode})`);
