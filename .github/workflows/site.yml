@@ -38,6 +38,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           UPPTIME_RC: .upptimerc.prod.yml
           
+      - name: Copy API data to site
+        run: |
+          cp -r api site/status-page/__sapper__/export/
+          cp -r graphs site/status-page/__sapper__/export/
+          cp -r history site/status-page/__sapper__/export/ || true
+          
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
