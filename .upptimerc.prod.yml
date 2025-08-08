@@ -3,7 +3,7 @@
 # Local endpoints are excluded to prevent false failures
 
 owner: cybermelons
-repo: halallife-status
+repo: gohalallife-healthcheck
 
 sites:
   # Production site monitoring

@@ -109,4 +109,18 @@ Contains only production endpoints:
 - [x] Created production-only config (.upptimerc.prod.yml)
 - [x] GitHub Actions configured for production monitoring
 - [x] Basic health checks working via CLI
-- [ ] Full Upptime integration pending (requires native dependencies)
+- [ ] Full Upptime integration requires Personal Access Token (PAT)
+
+## Required Setup for GitHub Actions
+
+1. Create a Personal Access Token:
+   - Go to https://github.com/settings/tokens
+   - Generate new token with `repo` scope
+   - Copy the token
+
+2. Add as repository secret:
+   ```bash
+   gh secret set GH_PAT --body="your-personal-access-token"
+   ```
+
+3. The workflows will then work properly
