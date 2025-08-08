@@ -43,6 +43,7 @@ jobs:
           cp -r api site/status-page/__sapper__/export/
           cp -r graphs site/status-page/__sapper__/export/
           cp -r history site/status-page/__sapper__/export/ || true
+          cp history/summary.json site/status-page/__sapper__/export/ || echo '{"status":"none"}' > site/status-page/__sapper__/export/summary.json
           
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
