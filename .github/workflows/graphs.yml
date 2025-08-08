@@ -25,6 +25,6 @@ jobs:
         with:
           command: "graphs"
         env:
-          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           UPPTIME_RC: .upptimerc.prod.yml
