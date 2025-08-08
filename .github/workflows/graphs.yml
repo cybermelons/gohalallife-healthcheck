@@ -20,19 +20,11 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          
       - name: Generate graphs
-        run: |
-          export UPPTIME_RC=.upptimerc.prod.yml
-          pnpx @upptime/uptime-monitor graphs
+        uses: upptime/uptime-monitor@v1.40.1
+        with:
+          command: "graphs"
         env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPPTIME_RC: .upptimerc.prod.yml

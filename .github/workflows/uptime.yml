@@ -20,42 +20,12 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Check endpoint status
+        uses: upptime/uptime-monitor@v1.40.1
         with:
-          node-version: 18
-          
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          
-      - name: Update status
-        run: |
-          # Set environment variable to use production config
-          export UPPTIME_RC=.upptimerc.prod.yml
-          pnpx @upptime/uptime-monitor update
+          command: "update"
         env:
+          GH_PAT: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPPTIME_RC: .upptimerc.prod.yml
           HEALTH_API_KEY: ${{ secrets.HEALTH_API_KEY }}
-          
-      - name: Generate graphs
-        run: |
-          export UPPTIME_RC=.upptimerc.prod.yml
-          pnpx @upptime/uptime-monitor graphs
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Generate site
-        run: |
-          export UPPTIME_RC=.upptimerc.prod.yml
-          pnpx @upptime/uptime-monitor site
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Generate summary
-        run: |
-          export UPPTIME_RC=.upptimerc.prod.yml
-          pnpx @upptime/uptime-monitor summary
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
