@@ -34,9 +34,12 @@ jobs:
           # Check endpoints
           check_endpoint "GoHalalLife Main Site" "https://gohalallife.com"
           check_endpoint "Status Worker" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/status"
-          check_endpoint "Database Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/db" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
-          check_endpoint "FTS Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/fts" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
-          check_endpoint "Performance" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/performance" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
+          
+          # Check authenticated endpoints
+          API_KEY="${{ secrets.HEALTH_API_KEY }}"
+          check_endpoint "Database Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/db" "-H \"X-API-Key: $API_KEY\""
+          check_endpoint "FTS Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/fts" "-H \"X-API-Key: $API_KEY\""
+          check_endpoint "Performance" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/performance" "-H \"X-API-Key: $API_KEY\""
           
           echo ""
           echo "✅ Health check complete!"
