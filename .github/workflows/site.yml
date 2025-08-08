@@ -41,7 +41,7 @@ jobs:
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./status-page/__sapper__/export/
+          path: ./site/status-page/__sapper__/export/
           
       - name: Deploy to GitHub Pages
         id: deployment
