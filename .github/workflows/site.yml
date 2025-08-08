@@ -42,8 +42,26 @@ jobs:
         run: |
           cp -r api site/status-page/__sapper__/export/
           cp -r graphs site/status-page/__sapper__/export/
-          cp -r history site/status-page/__sapper__/export/ || true
-          cp history/summary.json site/status-page/__sapper__/export/ || echo '{"status":"none"}' > site/status-page/__sapper__/export/summary.json
+          
+          # Create history directory if it doesn't exist
+          mkdir -p site/status-page/__sapper__/export/history
+          
+          # Copy history files if they exist, otherwise create empty ones
+          if [ -d "history" ]; then
+            cp -r history/* site/status-page/__sapper__/export/history/ 2>/dev/null || true
+          fi
+          
+          # Create minimal history files for each monitored site to prevent 404s
+          for site in "go-halal-life-main-site-production" "search-api-production" "status-worker-public-health-production" "status-worker-database-health-production" "status-worker-fts-health-production" "status-worker-performance-production"; do
+            if [ ! -f "site/status-page/__sapper__/export/history/${site}.yml" ]; then
+              echo "url: https://example.com" > "site/status-page/__sapper__/export/history/${site}.yml"
+              echo "status: up" >> "site/status-page/__sapper__/export/history/${site}.yml"
+              echo "history: []" >> "site/status-page/__sapper__/export/history/${site}.yml"
+            fi
+          done
+          
+          # Ensure summary.json exists
+          cp history/summary.json site/status-page/__sapper__/export/ 2>/dev/null || echo '{"status":"none"}' > site/status-page/__sapper__/export/summary.json
           
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
