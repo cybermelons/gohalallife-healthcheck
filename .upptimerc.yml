@@ -86,7 +86,7 @@ sites:
   - name: Local Status Worker - Database Health
     url: http://localhost:8787/health/db
     headers:
-      - "X-API-Key: test-api-key-12345"
+      - "X-API-Key: ${{ secrets.LOCAL_API_KEY }}"
     expectedStatusCodes: 
       - 200
       - 502  # Not running
@@ -96,7 +96,7 @@ sites:
   - name: Local Status Worker - FTS Health  
     url: http://localhost:8787/health/fts
     headers:
-      - "X-API-Key: test-api-key-12345"
+      - "X-API-Key: ${{ secrets.LOCAL_API_KEY }}"
     expectedStatusCodes: 
       - 200
       - 502  # Not running
@@ -106,7 +106,7 @@ sites:
   - name: Local Status Worker - Performance
     url: http://localhost:8787/health/performance
     headers:
-      - "X-API-Key: test-api-key-12345"
+      - "X-API-Key: ${{ secrets.LOCAL_API_KEY }}"
     expectedStatusCodes: 
       - 200
       - 502  # Not running
