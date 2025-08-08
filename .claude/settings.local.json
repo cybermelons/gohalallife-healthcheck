@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(pnpm install:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "Bash(gh run list:*)"
     ],
     "deny": []
   }

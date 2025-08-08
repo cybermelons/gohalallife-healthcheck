@@ -1,0 +1,42 @@
+# Simple health check test workflow
+name: Test Health Checks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"  # Every 15 minutes
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Check Production Endpoints
+        run: |
+          echo "🏥 Running health checks..."
+          
+          # Function to check endpoint
+          check_endpoint() {
+            local name="$1"
+            local url="$2"
+            local extra_args="${3:-}"
+            
+            echo -n "Checking $name... "
+            if curl -s -f -o /dev/null $extra_args "$url"; then
+              echo "✅ UP"
+            else
+              echo "❌ DOWN"
+            fi
+          }
+          
+          # Check endpoints
+          check_endpoint "GoHalalLife Main Site" "https://gohalallife.com"
+          check_endpoint "Status Worker" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/status"
+          check_endpoint "Database Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/db" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
+          check_endpoint "FTS Health" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/fts" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
+          check_endpoint "Performance" "https://gohalallife-status-production.innovativesolutions109-089.workers.dev/health/performance" "-H 'X-API-Key: ${{ secrets.HEALTH_API_KEY }}'"
+          
+          echo ""
+          echo "✅ Health check complete!"
