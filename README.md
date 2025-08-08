@@ -5,6 +5,7 @@ Health check and status monitoring for GoHalalLife services.
 ## Overview
 
 This repository contains:
+
 - **CLI Tool**: Local development tool for checking service health
 - **Status Worker**: Cloudflare Worker providing health check endpoints
 - **Upptime Integration**: GitHub Actions-based uptime monitoring
@@ -30,6 +31,7 @@ pnpm status:update # Show update info
 ## CLI Commands
 
 ### Status Checks
+
 - `pnpm status` - Quick health check of key endpoints
 - `pnpm status:prod` - Check production endpoints only
 - `pnpm status:build` - Information about building status pages
@@ -37,6 +39,7 @@ pnpm status:update # Show update info
 - `pnpm status:update` - Information about running updates
 
 ### View Status Page
+
 ```bash
 pnpm serve  # Serve the status page locally (after GitHub Actions generates it)
 ```
@@ -63,6 +66,7 @@ gohalallife-healthcheck/
 This project uses two Upptime configurations:
 
 1. **`.upptimerc.yml`** - Full configuration with all endpoints (local + production)
+
    - Used for local testing and development
    - Contains localhost endpoints for testing local services
 
@@ -82,7 +86,7 @@ sites:
       - 200
       - 201
     headers:
-      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}"  # For authenticated endpoints
+      - "X-API-Key: ${{ secrets.HEALTH_API_KEY }}" # For authenticated endpoints
 ```
 
 **Note**: The CLI provides basic health checks. Full Upptime features (graphs, history, incidents) are handled by GitHub Actions.
@@ -108,6 +112,7 @@ pnpm status-worker:deploy
 ### Local Testing
 
 1. Start the status worker locally:
+
    ```bash
    pnpm status-worker:dev
    ```
@@ -127,6 +132,7 @@ pnpm status-worker:deploy
 ## GitHub Actions
 
 This repository includes GitHub Actions workflows for:
+
 - Automated uptime monitoring (every 5 minutes)
 - Status page generation
 - Incident management
